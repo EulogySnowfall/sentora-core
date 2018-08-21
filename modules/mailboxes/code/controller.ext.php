@@ -119,9 +119,19 @@ class module_controller extends ctrl_module
      * @param int $uid
      * @return boolean
      */
-    static function ListDomains($uid)
+    static function ListDomains($uid = null)
     {
         global $zdbh;
+		
+		//Changes  for PHP 7.2 with ($uid = null)
+		
+		global $controller;
+		if (($uid == '') || (empty($uid)) || ($uid == null)) {
+    			$uid = ctrl_auth::CurrentUserID();
+		}
+		
+		// end of changes
+		
         $currentuser = ctrl_users::GetUserDetail($uid);
         
         $sql = "SELECT * FROM x_vhosts WHERE vh_acc_fk=:userid AND vh_enabled_in=1 AND vh_deleted_ts IS NULL ORDER BY vh_name_vc ASC";

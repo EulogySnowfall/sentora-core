@@ -104,9 +104,20 @@ class module_controller extends ctrl_module
      * @param int $uid
      * @return boolean
      */
-    static function getMailboxList($uid)
+    static function getMailboxList($uid = null)
     {
         global $zdbh;
+		
+		//Changes  for PHP 7.2 with ($uid = null)
+		
+		global $controller;
+		if (($uid == '') || (empty($uid)) || ($uid == null)) {
+    			$uid = ctrl_auth::CurrentUserID();
+		}
+		
+		// end of changes
+		
+		
         $currentuser = ctrl_users::GetUserDetail($uid);
         
         $sql = "SELECT * FROM x_mailboxes WHERE mb_acc_fk=:userid AND mb_deleted_ts IS NULL ORDER BY mb_address_vc ASC";
